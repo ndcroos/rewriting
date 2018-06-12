@@ -4,9 +4,9 @@ type ids = (term * term) list;
 
 (* complete: (term * term -> order) -> ids -> ids *)
 fun complete ord E =
-let fun compl(E,S,R) = case orient ord (E,S,R) of
-([],R') => R'
-| (S',R') => let val (rl,S") = choose S'
+    let fun compl(E,S,R) = case orient ord (E,S,R) of
+                               ([],R') => R'
+                             | (S',R') => let val (rl,S") = choose S'
 val cps = CriticalPairs2 [rl] R' 0
 CriticalPairs2 R' [rl] @
 CriticalPairs2 [rl] [rl]
@@ -15,30 +15,30 @@ in compl(E, [],[]) end;
 
 (* orient: (term * term -> order) -> ids * ids * ids -> ids * ids *)
 fun orient ord =
-let fun ori([],S,R) = (S,R)
-| ori((s,t)::E,S,R) =
-let val s' = norm (R@S) s
-val t' = norm (R@S) t
-in if s' = t' then ori(E,S,R) else
-if ord(s',tr) = GR then ori(addRule(s',t',E,S,R)) else
-if ord(t',s') = GR then ori(addRule(t',s',E,S,R)) else raise FAIL
-end
-in ori end;
+    let fun ori([],S,R) = (S,R)
+          | ori((s,t)::E,S,R) =
+            let val s' = norm (R@S) s
+                val t' = norm (R@S) t
+            in if s' = t' then ori(E,S,R) else
+               if ord(s',tr) = GR then ori(addRule(s',t',E,S,R)) else
+               if ord(t',s') = GR then ori(addRule(t',s',E,S,R)) else raise FAIL
+            end
+    in ori end;
 
 exception FAIL;
 
 
 (* addRule: term * term * ids * ids * ids -> ids * ids * ids *)
 fun addRule(l,r,E,S,R) =
-let fun simpl([],E',R') = (E',R')
-| simpl(g,d)::U,E',U') =
-let val g' = norm [(l,r)] g
-in if g' = g then let val d' = norm ((l,r) : :R@S) d
-in simpl(U, E', (g,d')::U') end
-else simpl(U, (g',d)::E, U')
-end
-val (E',S') = simpl(S,E,[])
-val (E",R') = simpl(R,E',[])
+    let fun simpl([],E',R') = (E',R')
+          | simpl(g,d)::U,E',U') =
+                                 let val g' = norm [(l,r)] g
+                                 in if g' = g then let val d' = norm ((l,r) : :R@S) d
+                                                   in simpl(U, E', (g,d')::U') end
+                                    else simpl(U, (g',d)::E, U')
+                                 end
+                                 val (E',S') = simpl(S,E,[])
+                                 val (E",R') = simpl(R,E',[])
 in (E", (l,r)::S", R') end;
 
 (* size: term -> int *)

@@ -1,11 +1,11 @@
-procedure merge(u,v);
-begin ifu^v then
-begin P := preds(u); Q := preds(v);
-Union(u, v);
-for all (p,q) e P xQ do
-ifpr/sq and congruent(p, q) then merge(p, q)
-end
-end
+(* closes the relation under congruence. *)
+fun  merge u v = 
+    if u <> v then
+        P = preds(u); 
+        Q = preds(v);
+        Union(u, v);
+        for all (p,q) e P xQ do
+            if pr <> sq and congruent(p, q) then merge(p, q)
 
 (* Variable names have a string and an index. *)
 type vname = string * int;
@@ -35,10 +35,11 @@ fun occurs x (V y) = x=y
 
 
 exception UNIFY;
+
 (* solve: (term * term) list * subst -> subst *)
 fun solve[], s) = s
-| solve (V x, t) :: S, s) =
-if V x = t then solve(S,s) else elim(x,t,S,s)
+              | solve (V x, t) :: S, s) =
+                     if V x = t then solve(S,s) else elim(x,t,S,s)
 | solve((t, V x) :: S, s) = elim(x,t,S,s)
 | solve((T(f,ts), T(g,us)) :: S, s) =
 if f = g then solve(zip(ts,us) @ S, s) else raise UNIFY
@@ -50,6 +51,7 @@ else let val xt = lift [(x,t)]
 in solve(map (fn (t1,t2) => (xt t1, xt t2)) S,
 (x,t) :: (map (fn (y,u) => (y, xt u)) s))
 end;
+
 (* unify: term * terra -> subst *)
 fun unify(t1,t2) = solve( [(t1,t2)] , []);
 
@@ -66,12 +68,13 @@ if f = g then matchs(zip(ts,us) @ S, s) else raise UNIFY;
 (* match: term * terra -> subst *)
 fun match(pat, obj) = matchs( [(pat, obj)] , []);
 
-
+(* declares user-defined exception NORM.  *)
 exception NORM;
+
 (* rewrite: (term * term) list -> term -> term *)
 fun rewrite [] t = raise NORM
-| rewrite ((l,r)::R) t = lift(match(l,t)) r
-handle UNIFY => rewrite R t;
+  | rewrite ((l,r)::R) t = lift(match(l,t)) r
+                           handle UNIFY => rewrite R t;
 
 (* norm: (term * term) list -> term -> term *)
 fun norm R (V x) = V sc
