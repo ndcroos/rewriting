@@ -1,4 +1,4 @@
 rewriting
 ==
 
-Algorithms for the field of term rewriting.
+Algorithms for term rewriting.
