@@ -7,9 +7,10 @@ fun  merge u v =
         for all (p,q) e P xQ do
             if pr <> sq and congruent(p, q) then merge(p, q)
 
+(* Representation of terms. *)
+
 (* Variable names have a string and an index. *)
 type vname = string * int;
-
 
 (* V and T are constructors. V's are variables. T's are terms *)
 datatype term = V of vname | T of string * term list
@@ -25,16 +26,22 @@ fun indom x s = exists (fn (y,_) => x = y) s;
 (* app: subst -> vname -> term *)
 fun app ((y,t)::s) x = if x=y then t else app s x;
 
+(* *)
 (* lift: subst -> term -> term *)
 fun lift s (V x) = if indom x s then app s x else V x
-| lift s (T(f,ts)) = T(J, map (lift s) ts);
+  | lift s (T(f,ts)) = T(J, map (lift s) ts);
 
+(* occurs tests if a variable belongs to a term.  *)
 (* occurs: vname -> term -> bool *)
 fun occurs x (V y) = x=y
-| occurs x (T(_tts)) = exists (occurs x) ts;
+  | occurs x (T(_,ts)) = exists (occurs x) ts;
 
 
 exception UNIFY;
+
+(* Actual unification is done by solve and elim,
+through mutual recursion.
+*)
 
 (* solve: (term * term) list * subst -> subst *)
 fun solve[], s) = s
@@ -102,7 +109,7 @@ else NGE
 | NGE => NGE
 else GR (*LP02a*);
 
-
+(* *)
 (* rpo: (string -> (term * term -> order) -> term list * term list -> order)
 -> (string * string -> order) -> term * term -> order *)
 fun rpo stat ord (s,t) = case (s,t) of
