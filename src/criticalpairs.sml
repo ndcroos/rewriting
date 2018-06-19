@@ -3,7 +3,10 @@ fun rename n (V(x,i)) = V(x,i+n)
   | rename n (T(f, ts)) = T(f, map (rename n) ts);
 
 
-fun max(i,j:int) = if i > j then i else j;
+(* Helper function for maxs *)
+fun max(i,j:int) = 
+    if i > j then i else j;
+
 (* maxs: int list -> int *)
 fun maxs (i::is) = max(i, maxs is)
   | maxs [] = 0;
