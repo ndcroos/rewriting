@@ -1,3 +1,7 @@
+
+(* Renaming terms comes down to incrementing indices.
+
+ *)
 (* rename: int -> term -> term *)
 fun rename n (V(x,i)) = V(x,i+n)
   | rename n (T(f, ts)) = T(f, map (rename n) ts);
@@ -11,17 +15,19 @@ fun max(i,j:int) =
 fun maxs (i::is) = max(i, maxs is)
   | maxs [] = 0;
 
+(* Need to calculate maximum index of a term. *)
 (* maxindex: term -> int *)
 fun maxindex (V(x,i)) = i
   | maxindex (T(_,ts)) = maxs (map maxindex ts) ;
 
 
-
+(* Critical pairs helper function. *)
 (* CP: (term -> term) -> term * term -> term * term -> (term * term) list *)
 fun CP C (t,r) (12,r2) = let val sigma = lift(unify(t,l2))
                          in [(sigma r, sigma(C r2))] end
                          handle UNIFY => [] ;
 
+(* Critical pairs.  *)
 (* CPs: (term * term) list -> term * term -> (term * term) list *)
 fun CPs R (l,r) =
     let fun cps C (V _, _) = []
