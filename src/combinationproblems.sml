@@ -9,7 +9,8 @@ fun mkLazy eagerEq subEq (s,t) =
     in eagerEq (s',t') end;
 
 (* *)
-fun cfeq (s,t) = (theory s = theory t) andalso (eq (theory s) cfeq (s,t));
+fun cfeq (s,t) = 
+    (theory s = theory t) andalso (eq (theory s) cfeq (s,t));
 
 (* *)
 fun eqE (s,t) = cfeq (collapse s, collapse t);
