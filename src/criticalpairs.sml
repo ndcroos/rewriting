@@ -23,9 +23,11 @@ fun maxindex (V(x,i)) = i
 
 (* Critical pairs helper function. *)
 (* CP: (term -> term) -> term * term -> term * term -> (term * term) list *)
-fun CP C (t,r) (12,r2) = let val sigma = lift(unify(t,l2))
-                         in [(sigma r, sigma(C r2))] end
-                         handle UNIFY => [] ;
+fun CP C (t,r) (12,r2) = 
+    let val sigma = lift(unify(t,l2))
+        in [(sigma r, sigma(C r2))] 
+    end
+    handle UNIFY => [] ;
 
 (* Critical pairs.  *)
 (* CPs: (term * term) list -> term * term -> (term * term) list *)
