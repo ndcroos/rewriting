@@ -14,20 +14,24 @@ fun lex ord ([],[]) = EQ
 
 (* reml: {a * (3 -> booD -> a list -> (3 -> a list *)
 fun reml ord ([],_) = []
-| reml ord (x::xs, y) = if ord(x,y) = EQ then xs
-else x :: reml ord {xs, y)) ;
-(* mdiff: (a * (3 -> bool) -> a list -> (3 list -> a list *)
-fun mdiff ord {xs, []) = xs
-| mdiff ord (xs, y::ys) - mdiff ord (reml ord (xs,y), ys);
+	| reml ord (x::xs, y) = if ord(x,y) = EQ then xs
+	else x :: reml ord {xs, y)) ;
+	(* mdiff: (a * (3 -> bool) -> a list -> (3 list -> a list *)
+	fun mdiff ord {xs, []) = xs
+	| mdiff ord (xs, y::ys) - mdiff ord (reml ord (xs,y), ys);
 
 (* mul: (a * a -> order) -> a list * a list -> order *)
 fun mul ord (ms,ns) =
-let val nms = mdiff ord (ns,ms)
-val mns = mdiff ord (ms,ns)
-in if null(nms) andalso null(mns) then EQ
-else if forall (fn n -> exists (fn m => ord(m,n) = GR) mns) nms
-then GR else NGE
-end;
+	let val nms = mdiff ord (ns,ms)
+		val mns = mdiff ord (ms,ns)
+	in 
+		if null(nms) andalso null(mns) 
+			then EQ
+	else 
+		if forall (fn n -> exists (fn m => ord(m,n) = GR) mns) nms
+			then GR 
+		else NGE
+	end;
 
 (* > Lex */
 
