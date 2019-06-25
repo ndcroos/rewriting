@@ -32,13 +32,13 @@ exception FAIL;
 fun addRule(l,r,E,S,R) =
     let fun simpl([],E',R') = (E',R')
           | simpl(g,d)::U,E',U') =
-                                 let val g' = norm [(l,r)] g
-                                 in if g' = g then let val d' = norm ((l,r) : :R@S) d
-                                                   in simpl(U, E', (g,d')::U') end
-                                    else simpl(U, (g',d)::E, U')
-                                 end
-                                 val (E',S') = simpl(S,E,[])
-                                 val (E",R') = simpl(R,E',[])
+             let val g' = norm [(l,r)] g
+             in if g' = g then let val d' = norm ((l,r) : :R@S) d
+                               in simpl(U, E', (g,d')::U') end
+                else simpl(U, (g',d)::E, U')
+             end
+             val (E',S') = simpl(S,E,[])
+             val (E",R') = simpl(R,E',[])
 in (E", (l,r)::S", R') end;
 
 (* size: term -> int *)
